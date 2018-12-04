@@ -1,9 +1,5 @@
 'use strict';
 
-// Возможно чтоило что-то вынести в константы (имена классов например)
-// Возможно стоит где-то избавиться от document.querySelector и вызвать на уже найденном объекте а не на документе целиком
-
-// npm test не даёт общие куски вынести в отдельный JS и подключить в html первым файлом, приходится дублировать
 var ENTER_KEYCODE = 13;
 var ESCAPE_KEYCODE = 27;
 
@@ -18,14 +14,21 @@ var hideElement = function (selector) {
   element.classList.toggle('visually-hidden', true);
 };
 
-// Стоит ли делать такие фнкции на каждый чих, или достаточно простого hideElement?
+var onUploadOverlayEscKeydown = function (evt) {
+  if (evt.keyCode === ESCAPE_KEYCODE) {
+    hideUploadOverlay();
+  }
+};
+
 var showUploadOverlay = function () {
   showElement('.img-upload__overlay');
+  document.addEventListener('keydown', onUploadOverlayEscKeydown);
 };
 
 var hideUploadOverlay = function () {
   hideElement('.img-upload__overlay');
   document.querySelector('.img-upload__form').reset();
+  document.removeEventListener('keydown', onUploadOverlayEscKeydown);
 };
 
 var hideEffectSlider = function () {
@@ -53,19 +56,20 @@ var resetImageFilters = function (preview, image) {
 };
 
 var generateFilterPropertyValue = function (filterClassName, effectLevelPercent) {
-  var filterPropertyValue = null;
-  if (filterClassName === 'effects__preview--chrome') {
-    filterPropertyValue = 'grayscale(' + effectLevelPercent + ')';
-  } else if (filterClassName === 'effects__preview--sepia') {
-    filterPropertyValue = 'sepia(' + effectLevelPercent + ')';
-  } else if (filterClassName === 'effects__preview--marvin') {
-    filterPropertyValue = 'invert(' + effectLevelPercent * 100 + '%)';
-  } else if (filterClassName === 'effects__preview--phobos') {
-    filterPropertyValue = 'blur(' + Math.round(effectLevelPercent * 3) + 'px)';
-  } else if (filterClassName === 'effects__preview--sepia') {
-    filterPropertyValue = 'brightness(' + Math.round(effectLevelPercent * 3) + ')';
+  switch (filterClassName) {
+    case 'effects__preview--chrome':
+      return 'grayscale(' + effectLevelPercent + ')';
+    case 'effects__preview--sepia':
+      return 'sepia(' + effectLevelPercent + ')';
+    case 'effects__preview--marvin':
+      return 'invert(' + effectLevelPercent * 100 + '%)';
+    case 'effects__preview--phobos':
+      return 'blur(' + Math.round(effectLevelPercent * 3) + 'px)';
+    case 'effects__preview--heat':
+      return 'brightness(' + Math.round(effectLevelPercent * 3) + ')';
+    default:
+      return null;
   }
-  return filterPropertyValue;
 };
 
 var applyImageFilterPreview = function (filterClassName) {
@@ -78,22 +82,12 @@ var applyImageFilterPreview = function (filterClassName) {
   }
 };
 
-document.querySelector('#upload-file').addEventListener('change', function () {
-  showUploadOverlay();
-});
+document.querySelector('#upload-file').addEventListener('change', showUploadOverlay);
 
-document.querySelector('.img-upload__cancel').addEventListener('click', function () {
-  hideUploadOverlay();
-});
+document.querySelector('.img-upload__cancel').addEventListener('click', hideUploadOverlay);
 
 document.querySelector('.img-upload__cancel').addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    hideUploadOverlay();
-  }
-});
-
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESCAPE_KEYCODE) {
     hideUploadOverlay();
   }
 });
@@ -102,8 +96,6 @@ document.querySelector('.effect-level__pin').addEventListener('mouseup', functio
   document.querySelector('.effect-level__value').value = calculateEffectLevelPercent();
 });
 
-// Вызывает сомнения ручное добавление лисенеров на каждую педаль да ещё и два раза - для клика и ентера
-// Вызывают сомнения харкоженные параметры в вызове applyImageFilterPreview
 document.querySelector('#effect-none').addEventListener('click', function () {
   hideEffectSlider();
   applyImageFilterPreview('effects__preview--none');
@@ -133,46 +125,3 @@ document.querySelector('#effect-heat').addEventListener('click', function () {
   showEffectSlider();
   applyImageFilterPreview('effects__preview--heat');
 });
-
-document.querySelector('#effect-none').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    hideEffectSlider();
-    applyImageFilterPreview('effects__preview--none');
-  }
-});
-
-document.querySelector('#effect-chrome').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    showEffectSlider();
-    applyImageFilterPreview('effects__preview--chrome');
-  }
-});
-
-document.querySelector('#effect-sepia').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    showEffectSlider();
-    applyImageFilterPreview('effects__preview--sepia');
-  }
-});
-
-document.querySelector('#effect-marvin').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    showEffectSlider();
-    applyImageFilterPreview('effects__preview--marvin');
-  }
-});
-
-document.querySelector('#effect-phobos').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    showEffectSlider();
-    applyImageFilterPreview('effects__preview--phobos');
-  }
-});
-
-document.querySelector('#effect-heat').addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    showEffectSlider();
-    applyImageFilterPreview('effects__preview--heat');
-  }
-});
-
