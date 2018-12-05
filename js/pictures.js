@@ -172,3 +172,43 @@ bigPictureCloseButton.addEventListener('keydown', function (evt) {
 
 window.hideElement('.social__comment-count');
 window.hideElement('.comments-loader');
+
+var hashTagsInput = document.querySelector('.text__hashtags');
+hashTagsInput.addEventListener('input', function (evt) {
+  var hashTags = evt.target.value.toLowerCase().split(' ').sort();
+  if (hashTags.length > 5) {
+    hashTagsInput.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+  } else {
+    for (var i = 0; i < hashTags.length; i++) {
+      var isDuplicateComments = false;
+      if (hashTags[i] === hashTags[i - 1]) {
+        hashTagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+        isDuplicateComments = 1;
+      } else if (!isDuplicateComments) {
+        var hashTag = hashTags[i].split('');
+        if (hashTag[0] !== '#') {
+          hashTagsInput.setCustomValidity('Хэш-тег должен начинаться с символа # (решётка)');
+        } else if ((hashTag[0] === '#') && (hashTag.length === 1)) {
+          hashTagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
+        } else if (hashTag.length > 20) {
+          hashTagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая решётку');
+        } else {
+          hashTagsInput.setCustomValidity('');
+        }
+      }
+    }
+  }
+});
+
+hashTagsInput.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESCAPE_KEYCODE) {
+    evt.stopPropagation();
+  }
+});
+
+var commentInput = document.querySelector('.text__description');
+commentInput.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESCAPE_KEYCODE) {
+    evt.stopPropagation();
+  }
+});
