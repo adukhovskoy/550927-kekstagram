@@ -183,12 +183,12 @@ hashTagsInput.addEventListener('input', function (evt) {
       var isDuplicateComments = false;
       if (hashTags[i] === hashTags[i - 1]) {
         hashTagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
-        isDuplicateComments = 1;
+        isDuplicateComments = true;
       } else if (!isDuplicateComments) {
-        var hashTag = hashTags[i].split('');
-        if (hashTag[0] !== '#') {
+        var hashTag = hashTags[i];
+        if (hashTag[0] !== '#' && hashTags[0] !== '') {
           hashTagsInput.setCustomValidity('Хэш-тег должен начинаться с символа # (решётка)');
-        } else if ((hashTag[0] === '#') && (hashTag.length === 1)) {
+        } else if (hashTag === '#') {
           hashTagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
         } else if (hashTag.length > 20) {
           hashTagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая решётку');
