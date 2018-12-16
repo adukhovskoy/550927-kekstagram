@@ -1,10 +1,17 @@
 'use strict';
 
-void function () {
+(function () {
   var BIG_PICTURE_CLASS = 'big-picture';
-  var BIG_PICTURE_CANCEL_CLASS = '.big-picture__cancel';
+  var BIG_PICTURE_LIKES_COUNT_CLASS = 'likes-count';
+  var BIG_PICTURE_COMMENTS_COUNT_CLASS = 'comments-count';
+  var BIG_PICTURE_DESCRIPTION = 'social__caption';
+  var BIG_PICTURE_CANCEL_CLASS = 'big-picture__cancel';
+  var BIG_PICTURE_COMMENTS_CLASS = 'social__comments';
+  var COMMENT_LI_CLASS = 'social__comment';
+  var COMMENT_AVATAR_CLASS = 'social__picture';
+  var COMMENT_TEXT_CLASS = 'social__text';
 
-  var bigPictureCloseButton = document.querySelector(BIG_PICTURE_CANCEL_CLASS);
+  var bigPictureCloseButton = document.querySelector('.' + BIG_PICTURE_CANCEL_CLASS);
 
   var onBigPictureEscKeydown = function (evt) {
     if (window.util.isEscEvent(evt)) {
@@ -24,17 +31,17 @@ void function () {
 
   var generateCommentElement = function (comment) {
     var li = document.createElement('li');
-    li.className = 'social__comment';
+    li.className = COMMENT_LI_CLASS;
 
     var img = document.createElement('img');
-    img.className = 'social__picture';
+    img.className = COMMENT_AVATAR_CLASS;
     img.src = comment.avatar;
     img.alt = 'Аватар комментатора фотографии';
     img.width = '35';
     img.height = '35';
 
     var p = document.createElement('p');
-    p.className = 'social__text';
+    p.className = COMMENT_TEXT_CLASS;
     p.textContent = comment.message;
 
     li.appendChild(img);
@@ -54,10 +61,10 @@ void function () {
   var fillBigPicture = function (bigPictureClass, picture) {
     var bigPicture = document.querySelector('.' + bigPictureClass);
     bigPicture.querySelector('.' + bigPictureClass + '__img' + ' > img').src = picture.url;
-    bigPicture.querySelector('.likes-count').textContent = picture.likes;
-    bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
-    bigPicture.querySelector('.social__caption').textContent = picture.description;
-    var socialComments = bigPicture.querySelector('.social__comments');
+    bigPicture.querySelector('.' + BIG_PICTURE_LIKES_COUNT_CLASS).textContent = picture.likes;
+    bigPicture.querySelector('.' + BIG_PICTURE_COMMENTS_COUNT_CLASS).textContent = picture.comments.length;
+    bigPicture.querySelector('.' + BIG_PICTURE_DESCRIPTION).textContent = picture.description;
+    var socialComments = bigPicture.querySelector('.' + BIG_PICTURE_COMMENTS_CLASS);
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
     }
@@ -79,4 +86,4 @@ void function () {
     fillBigPicture: fillBigPicture,
     pictureDetailsClass: BIG_PICTURE_CLASS
   };
-}();
+})();

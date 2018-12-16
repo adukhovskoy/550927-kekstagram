@@ -1,10 +1,19 @@
 'use strict';
-void function () {
-  var effectLevelPin = document.querySelector('.effect-level__pin');
-  var effectLevelLine = document.querySelector('.effect-level__line');
-  var effectLevelDepth = document.querySelector('.effect-level__depth');
+
+(function () {
+  var EffectSliderClass = {
+    pin: 'effect-level__pin',
+    line: 'effect-level__line',
+    depth: 'effect-level__depth'
+  };
+
+  var effectLevelPin = document.querySelector('.' + EffectSliderClass.pin);
+  var effectLevelLine = document.querySelector('.' + EffectSliderClass.line);
+  var effectLevelDepth = document.querySelector('.' + EffectSliderClass.depth);
   var imageUploadPreview = document.querySelector('.img-upload__preview');
   var imageUploadPreviewImage = imageUploadPreview.querySelector('img');
+  var hashTagsInput = document.querySelector('.text__hashtags');
+  var commentInput = document.querySelector('.text__description');
 
   var onUploadOverlayEscKeydown = function (evt) {
     if (window.util.isEscEvent(evt)) {
@@ -32,17 +41,13 @@ void function () {
   };
 
   var calculateEffectLevelPercent = function () {
-    var rangeWidth = document.querySelector('.effect-level__line').offsetWidth;
-    var rangeValue = document.querySelector('.effect-level__pin').offsetLeft;
+    var rangeWidth = effectLevelPin.offsetWidth;
+    var rangeValue = effectLevelPin.offsetLeft;
     return Math.round(100 / rangeWidth * rangeValue) / 100;
   };
 
   var resetImageFilters = function (preview, image) {
-    image.classList.remove('effects__preview--chrome');
-    image.classList.remove('effects__preview--sepia');
-    image.classList.remove('effects__preview--marvin');
-    image.classList.remove('effects__preview--phobos');
-    image.classList.remove('effects__preview--heat');
+    image.classList.remove('effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos', 'effects__preview--phobos', 'effects__preview--heat');
     preview.style.removeProperty('filter');
     document.querySelector('.effect-level__value').value = 100;
   };
@@ -138,7 +143,6 @@ void function () {
     }
   });
 
-  var hashTagsInput = document.querySelector('.text__hashtags');
   hashTagsInput.addEventListener('input', function (evt) {
     var hashTags = evt.target.value.toLowerCase().split(' ').sort();
     if (hashTags.length > 5) {
@@ -171,10 +175,9 @@ void function () {
     }
   });
 
-  var commentInput = document.querySelector('.text__description');
   commentInput.addEventListener('keydown', function (evt) {
     if (window.util.isEscEvent(evt)) {
       evt.stopPropagation();
     }
   });
-}();
+})();
