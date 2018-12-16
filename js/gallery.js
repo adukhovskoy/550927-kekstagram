@@ -1,12 +1,14 @@
 'use strict';
-void function () {
-  var TEMPLATE_ID = 'picture';
-  var GALLERY_CLASS = 'pictures';
 
-  var generateGallery = function (templateID, pictures) {
+(function () {
+  var GALLERY_CLASS = 'pictures';
+  var SOCIAL_COMMENT_COUNT_CLASS = 'social__comment-count';
+  var COMMENTS_LOADER_CLASS = 'comments-loader';
+
+  var generateGallery = function (pictures) {
     var fragment = document.createDocumentFragment();
     pictures.forEach(function (picture) {
-      var galleryElement = window.picture.generatePictureElement(templateID, picture);
+      var galleryElement = window.picture.generatePictureElement(picture);
       fragment.appendChild(galleryElement);
     });
     return (fragment);
@@ -14,16 +16,11 @@ void function () {
 
   var insertGalleryElement = function (pictures) {
     var galleryElement = document.querySelector('.' + GALLERY_CLASS);
-    galleryElement.appendChild(generateGallery(TEMPLATE_ID, pictures));
+    galleryElement.appendChild(generateGallery(pictures));
   };
 
   window.data.load('https://js.dump.academy/kekstagram/data', insertGalleryElement);
 
-  window.util.hideElement('.social__comment-count');
-  window.util.hideElement('.comments-loader');
-
-  window.gallery = {
-    templateID: TEMPLATE_ID,
-    galleryClass: GALLERY_CLASS
-  };
-}();
+  window.util.hideElement('.' + SOCIAL_COMMENT_COUNT_CLASS);
+  window.util.hideElement('.' + COMMENTS_LOADER_CLASS);
+})();

@@ -1,5 +1,6 @@
 'use strict';
-void function () {
+
+(function () {
   var Keycode = {
     ESC: 27,
     ENTER: 13,
@@ -7,11 +8,11 @@ void function () {
   };
 
   var isEscEvent = function (evt) {
-    return evt.keyCode === Keycode['ESC'];
+    return evt.keyCode === Keycode.ESC;
   };
 
   var isEnterEvent = function (evt) {
-    return (evt.keyCode === Keycode['ENTER']) || (evt.keyCode === Keycode['NUMPAD_ENTER']);
+    return (evt.keyCode === Keycode.ENTER) || (evt.keyCode === Keycode.NUMPAD_ENTER);
   };
 
   var showElement = function (selector) {
@@ -31,4 +32,4 @@ void function () {
     showElement: showElement,
     hideElement: hideElement
   };
-}();
+})();
