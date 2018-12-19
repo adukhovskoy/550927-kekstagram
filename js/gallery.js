@@ -19,7 +19,8 @@
     galleryElement.appendChild(generateGallery(pictures));
   };
 
-  window.data.load('https://js.dump.academy/kekstagram/data', insertGalleryElement);
+  window.backend.download(insertGalleryElement, function () {
+  });
 
   window.util.hideElement(SOCIAL_COMMENT_COUNT_CLASS);
   window.util.hideElement(COMMENTS_LOADER_CLASS);

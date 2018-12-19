@@ -36,5 +36,10 @@
         }
       }
     }
+    if (!window.uploadPhoto.hashTagsInput.checkValidity()) {
+      window.uploadPhoto.hashTagsInput.style.borderColor = 'red';
+    } else {
+      window.uploadPhoto.hashTagsInput.style.borderColor = 'initial';
+    }
   });
 })();
