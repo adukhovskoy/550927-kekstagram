@@ -26,10 +26,19 @@
     element.classList.toggle('visually-hidden', true);
   };
 
+  function getRandomInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  var getRandomIndex = function (array) {
+    return getRandomInRange(0, array.length - 1);
+  };
+
   window.util = {
     isEscEvent: isEscEvent,
     isEnterEvent: isEnterEvent,
     showElement: showElement,
-    hideElement: hideElement
+    hideElement: hideElement,
+    getRandomIndex: getRandomIndex
   };
 })();

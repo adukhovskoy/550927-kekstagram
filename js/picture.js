@@ -16,13 +16,13 @@
     element.querySelector(PICTURE_COMMENTS_CLASS).textContent = picture.comments.length;
 
     element.addEventListener('click', function () {
-      window.pictureDetails.fillBigPicture(window.pictureDetails.pictureDetailsClass, picture);
-      window.pictureDetails.showBigPicture();
+      window.pictureDetails.initBigPicture(picture);
     });
     return (element);
   };
 
   window.picture = {
-    generatePictureElement: generatePictureElement
+    generatePictureElement: generatePictureElement,
+    pictureClass: PICTURE_CLASS
   };
 })();
