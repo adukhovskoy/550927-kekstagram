@@ -8,6 +8,7 @@
   var GALLERY_FILTER_NEW_ID = '#filter-new';
   var GALLERY_FILTER_DISCUSSED_ID = '#filter-discussed';
   var GALLERY_FILTER_ACTIVE_BUTTON_CLASS = 'img-filters__button--active';
+  var GALLERY_BOUNCE_TIMEOUT = 500;
   var NEW_PICTURES_MAX_COUNT = 10;
 
   var galleryFiltersElement = document.querySelector(GALLERY_FILTERS_CLASS);
@@ -72,21 +73,27 @@
   var initGallery = function (xhrResponse) {
     // изначально было 3 хендлера но они делали одно и то же кроме filterNewPictures и filterDiscussedPictures, вынес их в callback, норм?
     var createFilterClick = function (callback) {
+      var lastTimeout;
       var onFilterPopularClick = function (evt) {
-        cleanGallery();
-        if (callback) {
-          appendGalleryElement(generateGallery(callback(xhrResponse)));
-        } else {
-          appendGalleryElement(generateGallery(xhrResponse));
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
         }
-        var galleryFilterButtons = galleryFiltersElement.querySelectorAll(GALLERY_FILTERS_BUTTON_CLASS);
-        Array.prototype.forEach.call(galleryFilterButtons, function (button) {
-          if (!(button === evt.target)) {
-            button.classList.toggle(GALLERY_FILTER_ACTIVE_BUTTON_CLASS, false);
+        window.setTimeout(function () {
+          cleanGallery();
+          if (callback) {
+            appendGalleryElement(generateGallery(callback(xhrResponse)));
           } else {
-            button.classList.toggle(GALLERY_FILTER_ACTIVE_BUTTON_CLASS, true);
+            appendGalleryElement(generateGallery(xhrResponse));
           }
-        });
+          var galleryFilterButtons = galleryFiltersElement.querySelectorAll(GALLERY_FILTERS_BUTTON_CLASS);
+          Array.prototype.forEach.call(galleryFilterButtons, function (button) {
+            if (!(button === evt.target)) {
+              button.classList.toggle(GALLERY_FILTER_ACTIVE_BUTTON_CLASS, false);
+            } else {
+              button.classList.toggle(GALLERY_FILTER_ACTIVE_BUTTON_CLASS, true);
+            }
+          });
+        }, GALLERY_BOUNCE_TIMEOUT);
       };
       return (onFilterPopularClick);
     };

@@ -78,8 +78,10 @@
       };
 
       socialComments.appendChild(generateCommentElements(getCommentsBatch()));
-      var commentsCountValue = shownCommentCount < picture.comments.length ? shownCommentCount : picture.comments.length;
-      commentsCount.innerHTML = commentsCountValue + ' из <span class="' + COMMENTS_ALL_COUNT_CLASS.slice(1) + '">' + picture.comments.length + '</span > комментариев';
+      commentsCount.innerHTML = shownCommentCount + ' из <span class="' + COMMENTS_ALL_COUNT_CLASS.slice(1) + '">' + picture.comments.length + '</span > комментариев';
+      if (shownCommentCount === picture.comments.length) {
+        window.util.hideElement(SHOW_MORE_COMMENTS_CLASS);
+      }
     };
 
     bigPicture.querySelector(BIG_PICTURE_CLASS + '__img' + ' > img').src = picture.url;
