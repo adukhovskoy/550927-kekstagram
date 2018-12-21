@@ -12,27 +12,24 @@
   var NEW_PICTURES_MAX_COUNT = 10;
 
   var galleryFiltersElement = document.querySelector(GALLERY_FILTERS_CLASS);
+  var galleryElement = document.querySelector(GALLERY_CLASS);
 
   var generateGallery = function (pictures) {
     var fragment = document.createDocumentFragment();
     pictures.forEach(function (picture) {
-      var galleryElement = window.picture.generatePictureElement(picture);
-      fragment.appendChild(galleryElement);
+      var galleryPictureElement = window.picture.generatePictureElement(picture);
+      fragment.appendChild(galleryPictureElement);
     });
     return (fragment);
   };
 
   var appendGalleryElement = function (fragment) {
-    // не стал выносить наружу galleryElement т.к. каждый вызов может быть на DOM, изменённом через cleanGallery, наверно правильно переполучать элемент каждый раз
-    var galleryElement = document.querySelector(GALLERY_CLASS);
     galleryElement.appendChild(fragment);
   };
 
   var cleanGallery = function () {
-    var galleryPictures = document.querySelector(GALLERY_CLASS).querySelectorAll(window.picture.pictureClass);
-    // попытался сделать через while (galleryElement.lastChild.classList.contains(window.picture.pictureClass.substring(1)))
-    // но оно валит ошибку когда натыкается на элемент без класса, cannot .contains of undefined
-    Array.prototype.forEach.call(galleryPictures, function (picture) {
+    var galleryPicturesElements = galleryElement.querySelectorAll(window.picture.PICTURE_CLASS);
+    Array.prototype.forEach.call(galleryPicturesElements, function (picture) {
       picture.parentNode.removeChild(picture);
     });
   };
@@ -71,14 +68,13 @@
   };
 
   var initGallery = function (xhrResponse) {
-    // изначально было 3 хендлера но они делали одно и то же кроме filterNewPictures и filterDiscussedPictures, вынес их в callback, норм?
     var createFilterClick = function (callback) {
       var lastTimeout;
       var onFilterPopularClick = function (evt) {
         if (lastTimeout) {
           window.clearTimeout(lastTimeout);
         }
-        window.setTimeout(function () {
+        lastTimeout = window.setTimeout(function () {
           cleanGallery();
           if (callback) {
             appendGalleryElement(generateGallery(callback(xhrResponse)));

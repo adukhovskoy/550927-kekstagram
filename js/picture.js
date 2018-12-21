@@ -23,6 +23,6 @@
 
   window.picture = {
     generatePictureElement: generatePictureElement,
-    pictureClass: PICTURE_CLASS
+    PICTURE_CLASS: PICTURE_CLASS
   };
 })();

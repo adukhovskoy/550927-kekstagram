@@ -81,6 +81,8 @@
       commentsCount.innerHTML = shownCommentCount + ' из <span class="' + COMMENTS_ALL_COUNT_CLASS.slice(1) + '">' + picture.comments.length + '</span > комментариев';
       if (shownCommentCount === picture.comments.length) {
         window.util.hideElement(SHOW_MORE_COMMENTS_CLASS);
+      } else {
+        window.util.showElement(SHOW_MORE_COMMENTS_CLASS);
       }
     };
 
