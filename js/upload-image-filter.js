@@ -50,25 +50,38 @@
   };
 
   var applyFilter = function (effectLevelPercent) {
-    var filterPropertyValue = generateFilterPropertyValue(effectLevelPercent);
-    window.uploadPhoto.uploadPreviewImageElement.classList.add(EFFECT_CLASS_PREFIX + currentFilterName);
-    if (filterPropertyValue) {
+    if (currentFilterName !== EffectName.NONE) {
+      var filterPropertyValue = generateFilterPropertyValue(effectLevelPercent);
+      window.uploadPhoto.uploadPreviewImageElement.classList.add(EFFECT_CLASS_PREFIX + currentFilterName);
       window.uploadPhoto.uploadPreviewImageElement.style.filter = filterPropertyValue;
       effectLevelValue.value = effectLevelPercent * 100;
     }
   };
 
+  var cleanCurrentFilter = function () {
+    window.uploadPhoto.uploadPreviewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
+    if (currentFilterName === EffectName.NONE) {
+      window.uploadPhoto.uploadPreviewImageElement.style.filter = '';
+    }
+    window.uploadPhoto.uploadPreviewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
+  };
+
   var onFilterClick = function (evt) {
     if (evt.target.name === 'effect') {
       var newFilterName = document.querySelector('input[name="effect"]:checked').value;
-      if (currentFilterName === 'none' && newFilterName !== 'none') {
-        showEffectSlider();
-      } else if (currentFilterName !== 'none' && newFilterName === 'none') {
-        hideEffectSlider();
+      if (newFilterName !== currentFilterName) {
+        cleanCurrentFilter();
+        if (currentFilterName !== 'none' && newFilterName === 'none') {
+          hideEffectSlider();
+          currentFilterName = newFilterName;
+        } else {
+          if (currentFilterName === 'none' && newFilterName !== 'none') {
+            showEffectSlider();
+          }
+          currentFilterName = newFilterName;
+          window.slider.setSlider(EffectSliderClass, applyFilter, DEFAULT_FILTER_LEVEL);
+        }
       }
-      currentFilterName = newFilterName;
-      window.uploadPhoto.uploadPreviewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
-      window.slider.setSlider(EffectSliderClass, applyFilter, DEFAULT_FILTER_LEVEL);
     }
   };
 

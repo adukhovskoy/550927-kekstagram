@@ -35,7 +35,6 @@
           effectLevelDepth.style.width = effectLevelLine.offsetWidth + 'px';
         }
         // Если вылез слева / справа - коплю overflow
-        // В целом такое себе решение с overflow, копится ошибка при резком перемещенииза край, курсор уползает от пина, как победить - хз
         if (effectLevelPin.offsetLeft === 0) {
           overflowLeft += shiftX;
         } else if (parseInt(effectLevelPin.style.left, 10) === parseInt(effectLevelLine.offsetWidth, 10)) {
