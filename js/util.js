@@ -11,10 +11,6 @@
     return evt.keyCode === Keycode.ESC;
   };
 
-  var isEnterEvent = function (evt) {
-    return (evt.keyCode === Keycode.ENTER) || (evt.keyCode === Keycode.NUMPAD_ENTER);
-  };
-
   var showElement = function (selector) {
     var element = document.querySelector(selector);
     element.classList.toggle('hidden', false);
@@ -36,7 +32,6 @@
 
   window.util = {
     isEscEvent: isEscEvent,
-    isEnterEvent: isEnterEvent,
     showElement: showElement,
     hideElement: hideElement,
     getRandomIndex: getRandomIndex

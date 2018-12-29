@@ -5,9 +5,9 @@
   var UPLOAD_CANCEL_BUTTON_ID = '#upload-cancel';
   var UPLOAD_OVERLAY_CLASS = '.img-upload__overlay';
   var UPLOAD_FORM_CLASS = '.img-upload__form';
+  var IMAGE_UPLOAD_PREVIEW_CLASS = '.img-upload__preview';
   var UPLOAD_SUCCESS_ID = '#success';
   var UPLOAD_ERROR_ID = '#error';
-
   var UPLOAD_SUCCESS_SECTION_CLASS = '.success';
   var UPLOAD_ERROR_SECTION_CLASS = '.error';
   var UPLOAD_SUCCESS_DIALOG_CLASS = '.success__inner';
@@ -15,7 +15,10 @@
   var UPLOAD_SUCCESS_BUTTON_CLASS = '.success__button';
   var UPLOAD_ERROR_BUTTON_CLASS = '.error__button';
 
-  var uploadForm = document.querySelector(UPLOAD_FORM_CLASS);
+  var uploadFormElement = document.querySelector(UPLOAD_FORM_CLASS);
+  var uploadButtonElement = document.querySelector(UPLOAD_BUTTON_ID);
+  var uploadPreviewElement = document.querySelector(IMAGE_UPLOAD_PREVIEW_CLASS);
+  var uploadPreviewImageElement = uploadPreviewElement.querySelector('img');
   var hashTagsInput = document.querySelector('.text__hashtags');
   var commentInput = document.querySelector('.text__description');
   var main = document.querySelector('main');
@@ -49,7 +52,7 @@
 
   var hideUploadOverlay = function () {
     window.util.hideElement(UPLOAD_OVERLAY_CLASS);
-    uploadForm.reset();
+    uploadFormElement.reset();
     document.removeEventListener('keydown', onUploadOverlayEscKeydown);
   };
 
@@ -118,15 +121,30 @@
     hideUploadOverlay();
   };
 
-  uploadForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(uploadForm), showUploadSuccess, showUploadError);
+  var updateImagePreview = function () {
+    var imageFile = uploadButtonElement.files[0];
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      uploadPreviewImageElement.src = reader.result;
+    });
+    reader.readAsDataURL(imageFile);
+  };
+
+  uploadFormElement.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(uploadFormElement), showUploadSuccess, showUploadError);
     evt.preventDefault();
   });
 
-  document.querySelector(UPLOAD_BUTTON_ID).addEventListener('change', showUploadOverlay);
+  uploadButtonElement.addEventListener('change', function () {
+    updateImagePreview();
+    showUploadOverlay();
+  });
+
   document.querySelector(UPLOAD_CANCEL_BUTTON_ID).addEventListener('click', hideUploadOverlay);
 
   window.uploadPhoto = {
-    hashTagsInput: hashTagsInput
+    hashTagsInput: hashTagsInput,
+    uploadPreviewElement: uploadPreviewElement,
+    uploadPreviewImageElement: uploadPreviewImageElement
   };
 })();
