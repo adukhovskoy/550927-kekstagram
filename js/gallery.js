@@ -17,7 +17,7 @@
   var generateGallery = function (pictures) {
     var fragment = document.createDocumentFragment();
     pictures.forEach(function (picture) {
-      var galleryPictureElement = window.picture.generatePictureElement(picture);
+      var galleryPictureElement = window.picture.generateElement(picture);
       fragment.appendChild(galleryPictureElement);
     });
     return (fragment);
@@ -28,7 +28,7 @@
   };
 
   var cleanGallery = function () {
-    var galleryPicturesElements = galleryElement.querySelectorAll(window.picture.PICTURE_CLASS);
+    var galleryPicturesElements = galleryElement.querySelectorAll(window.picture.CLASS);
     Array.prototype.forEach.call(galleryPicturesElements, function (picture) {
       picture.parentNode.removeChild(picture);
     });
@@ -60,9 +60,8 @@
           return 1;
         } else if (a.likes > b.likes) {
           return -1;
-        } else {
-          return 0;
         }
+        return 0;
       }
     });
   };

@@ -63,7 +63,7 @@
   };
 
   window.slider = {
-    initSlider: initSlider,
-    setSlider: setSlider
+    init: initSlider,
+    set: setSlider
   };
 })();

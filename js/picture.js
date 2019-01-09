@@ -22,7 +22,7 @@
   };
 
   window.picture = {
-    generatePictureElement: generatePictureElement,
-    PICTURE_CLASS: PICTURE_CLASS
+    generateElement: generatePictureElement,
+    CLASS: PICTURE_CLASS
   };
 })();
