@@ -5,7 +5,6 @@
   var UPLOAD_CANCEL_BUTTON_ID = '#upload-cancel';
   var UPLOAD_OVERLAY_CLASS = '.img-upload__overlay';
   var UPLOAD_FORM_CLASS = '.img-upload__form';
-  var IMAGE_UPLOAD_PREVIEW_CLASS = '.img-upload__preview';
   var UPLOAD_SUCCESS_ID = '#success';
   var UPLOAD_ERROR_ID = '#error';
   var UPLOAD_SUCCESS_SECTION_CLASS = '.success';
@@ -17,8 +16,6 @@
 
   var uploadFormElement = document.querySelector(UPLOAD_FORM_CLASS);
   var uploadButtonElement = document.querySelector(UPLOAD_BUTTON_ID);
-  var uploadPreviewElement = document.querySelector(IMAGE_UPLOAD_PREVIEW_CLASS);
-  var uploadPreviewImageElement = uploadPreviewElement.querySelector('img');
   var hashTagsInput = document.querySelector('.text__hashtags');
   var commentInput = document.querySelector('.text__description');
   var main = document.querySelector('main');
@@ -48,6 +45,9 @@
   var showUploadOverlay = function () {
     window.util.showElement(UPLOAD_OVERLAY_CLASS);
     document.addEventListener('keydown', onUploadOverlayEscKeydown);
+    window.slider.set(window.uploadPhotoFilter.EffectSliderClass, window.uploadPhotoFilter.apply, window.uploadPhotoFilter.DEFAULT_FILTER_LEVEL);
+    window.uploadPhotoFilter.reset(window.uploadPhotoFilter.DEFAULT_FILTER_LEVEL);
+    window.uploadPhotoZoom.reset();
   };
 
   var hideUploadOverlay = function () {
@@ -125,7 +125,7 @@
     var imageFile = uploadButtonElement.files[0];
     var reader = new FileReader();
     reader.addEventListener('load', function () {
-      uploadPreviewImageElement.src = reader.result;
+      window.uploadPhotoFilter.previewImageElement.src = reader.result;
     });
     reader.readAsDataURL(imageFile);
   };
@@ -143,8 +143,6 @@
   document.querySelector(UPLOAD_CANCEL_BUTTON_ID).addEventListener('click', hideUploadOverlay);
 
   window.uploadPhoto = {
-    hashTagsInput: hashTagsInput,
-    uploadPreviewElement: uploadPreviewElement,
-    uploadPreviewImageElement: uploadPreviewImageElement
+    hashTagsInput: hashTagsInput
   };
 })();

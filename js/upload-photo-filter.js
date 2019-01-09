@@ -21,8 +21,12 @@
   var DEFAULT_FILTER_LEVEL = 1;
   var EFFECT_CLASS_PREFIX = 'effects__preview--';
   var EFFECTS_LIST_CLASS = '.effects__list';
+  var EFFECT_RADIO_NAME = 'effect';
+  var IMAGE_UPLOAD_PREVIEW_CLASS = '.img-upload__preview';
+  var previewElement = document.querySelector(IMAGE_UPLOAD_PREVIEW_CLASS);
+  var previewImageElement = previewElement.querySelector('img');
   var effectLevelValue = document.querySelector(EffectSliderClass.VALUE);
-  var currentFilterName = EffectName.NONE;
+  var currentFilterName = document.querySelector('input[name="' + EFFECT_RADIO_NAME + '"]:checked').value;
 
   var hideEffectSlider = function () {
     window.util.hideElement(EffectSliderClass.SLIDER);
@@ -52,23 +56,29 @@
   var applyFilter = function (effectLevelPercent) {
     if (currentFilterName !== EffectName.NONE) {
       var filterPropertyValue = generateFilterPropertyValue(effectLevelPercent);
-      window.uploadPhoto.uploadPreviewImageElement.classList.add(EFFECT_CLASS_PREFIX + currentFilterName);
-      window.uploadPhoto.uploadPreviewImageElement.style.filter = filterPropertyValue;
+      previewImageElement.classList.add(EFFECT_CLASS_PREFIX + currentFilterName);
+      previewImageElement.style.filter = filterPropertyValue;
       effectLevelValue.value = effectLevelPercent * 100;
     }
   };
 
   var cleanCurrentFilter = function () {
-    window.uploadPhoto.uploadPreviewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
+    previewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
     if (currentFilterName === EffectName.NONE) {
-      window.uploadPhoto.uploadPreviewImageElement.style.filter = '';
+      previewImageElement.style.filter = '';
     }
-    window.uploadPhoto.uploadPreviewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
+    previewImageElement.classList.remove(EFFECT_CLASS_PREFIX + currentFilterName);
+  };
+
+  var resetFilter = function (effectLevelPercent) {
+    currentFilterName = document.querySelector('input[name="' + EFFECT_RADIO_NAME + '"]:checked').value;
+    cleanCurrentFilter();
+    applyFilter(effectLevelPercent);
   };
 
   var onFilterClick = function (evt) {
     if (evt.target.name === 'effect') {
-      var newFilterName = document.querySelector('input[name="effect"]:checked').value;
+      var newFilterName = document.querySelector('input[name="' + EFFECT_RADIO_NAME + '"]:checked').value;
       if (newFilterName !== currentFilterName) {
         cleanCurrentFilter();
         if (currentFilterName !== 'none' && newFilterName === 'none') {
@@ -79,13 +89,21 @@
             showEffectSlider();
           }
           currentFilterName = newFilterName;
-          window.slider.setSlider(EffectSliderClass, applyFilter, DEFAULT_FILTER_LEVEL);
+          window.slider.set(EffectSliderClass, applyFilter, DEFAULT_FILTER_LEVEL);
         }
       }
     }
   };
 
-  window.slider.initSlider(EffectSliderClass, applyFilter);
-  hideEffectSlider();
+  window.slider.init(EffectSliderClass, applyFilter);
   document.querySelector(EFFECTS_LIST_CLASS).addEventListener('click', onFilterClick);
+
+  window.uploadPhotoFilter = {
+    reset: resetFilter,
+    apply: applyFilter,
+    previewElement: previewElement,
+    previewImageElement: previewImageElement,
+    EffectSliderClass: EffectSliderClass,
+    DEFAULT_FILTER_LEVEL: DEFAULT_FILTER_LEVEL
+  };
 })();

@@ -8,6 +8,8 @@
   };
 
   var ZOOM_STEP = 25;
+  var ZOOM_MAX = 100;
+  var ZOOM_MIN = 25;
 
   var zoomInButtonElement = document.querySelector(ZoomClass.ZOOM_IN);
   var zoomOutButtonElement = document.querySelector(ZoomClass.ZOOM_OUT);
@@ -15,17 +17,18 @@
 
   var currentZoomLevel = document.querySelector(ZoomClass.VALUE).value;
   currentZoomLevel = parseInt(currentZoomLevel.substr(0, currentZoomLevel.length - 1), 10);
-  currentZoomLevel = currentZoomLevel > 100 ? 100 : currentZoomLevel;
-  currentZoomLevel = currentZoomLevel < 0 ? 0 : currentZoomLevel;
+  var defaultZoomLevel = currentZoomLevel;
+  currentZoomLevel = currentZoomLevel > ZOOM_MAX ? ZOOM_MAX : currentZoomLevel;
+  currentZoomLevel = currentZoomLevel < ZOOM_MIN ? ZOOM_MIN : currentZoomLevel;
 
   var increaseZoom = function () {
     currentZoomLevel += ZOOM_STEP;
-    currentZoomLevel = currentZoomLevel > 100 ? 100 : currentZoomLevel;
+    currentZoomLevel = currentZoomLevel > ZOOM_MAX ? ZOOM_MAX : currentZoomLevel;
   };
 
   var decreaseZoom = function () {
     currentZoomLevel -= ZOOM_STEP;
-    currentZoomLevel = currentZoomLevel < 0 ? 0 : currentZoomLevel;
+    currentZoomLevel = currentZoomLevel < ZOOM_MIN ? ZOOM_MIN : currentZoomLevel;
   };
 
   var generateZoomPropertyValue = function () {
@@ -34,7 +37,12 @@
 
   var applyZoom = function () {
     zoomValueElement.value = currentZoomLevel + '%';
-    window.uploadPhoto.uploadPreviewImageElement.style.transform = generateZoomPropertyValue();
+    window.uploadPhotoFilter.previewImageElement.style.transform = generateZoomPropertyValue();
+  };
+
+  var resetZoom = function() {
+    currentZoomLevel = defaultZoomLevel;
+    applyZoom();
   };
 
   var zoomHandler = function (callback) {
@@ -50,4 +58,8 @@
   applyZoom();
   zoomInButtonElement.addEventListener('click', onZoomInButtonClick);
   zoomOutButtonElement.addEventListener('click', onZoomOutButtonClick);
+  
+  window.uploadPhotoZoom = {
+    reset: resetZoom
+  };
 })();
