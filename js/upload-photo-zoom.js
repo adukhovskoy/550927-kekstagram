@@ -40,7 +40,7 @@
     window.uploadPhotoFilter.previewImageElement.style.transform = generateZoomPropertyValue();
   };
 
-  var resetZoom = function() {
+  var resetZoom = function () {
     currentZoomLevel = defaultZoomLevel;
     applyZoom();
   };
@@ -58,7 +58,7 @@
   applyZoom();
   zoomInButtonElement.addEventListener('click', onZoomInButtonClick);
   zoomOutButtonElement.addEventListener('click', onZoomOutButtonClick);
-  
+
   window.uploadPhotoZoom = {
     reset: resetZoom
   };
